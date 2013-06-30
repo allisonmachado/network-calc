@@ -3,6 +3,31 @@
 
 #define BUFFER 100
 
+void binary_print(unsigned int number)
+{
+    unsigned int mask = 0xff000000; // máscara para o último byte
+    unsigned int shift = 24; // isolar os bytes, começa isolando o primeiro byte
+    unsigned int byte, byte_iterator, bit_iterator; //variáveis auxiliares
+
+    for(byte_iterator = 0; byte_iterator < 4; byte_iterator++) // percorre todos os bytes
+    {
+        byte = (number & mask) >> shift;
+        printf(" ");
+
+        for(bit_iterator = 0; bit_iterator < 8; bit_iterator++) // percorre todos os bits
+        {
+            if(byte & 128) //imprime o valor do bit 
+                printf("1");
+            else
+                printf("0");
+            byte <<= 1;
+        }
+        mask >>= 8; // ajusta a máscara para pegar o próximo byte
+        shift -= 8; // ajusta o shift para pegar o próximo byte
+        
+    }
+}
+
 void handle_input()
 {
 	char string[BUFFER] = "10.10.12.0/30";
