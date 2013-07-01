@@ -14,18 +14,18 @@ void usage(char * program_name)
 
 void print_ip_address(int * number_addr)
 {
-    unsigned char * raw_ptr;
+    unsigned char * raw_ptr; // pointer to get single bytes
     int i, aux_int;
     raw_ptr = (unsigned char *) number_addr;
 
-    for (i = 3; i > -1; i--)
+    for (i = 3; i > -1; i--) // run through the four integer bytes
     {
         aux_int = raw_ptr[i];
         printf("%d", aux_int);
         if(i != 0)
             printf(".");
     }
-    printf("\n");
+    printf(" ");
 }
 
 void binary_print(unsigned int number)
@@ -53,10 +53,12 @@ void binary_print(unsigned int number)
     }
 }
 
+// store the results in the global variables
 void handle_input(char * string)
 {
     unsigned int i, shift, temp = 0;
     
+    // makes the input string an integer number in ip_number
     shift = 24;
     ip_number = (atoi(&string[0]) << shift);
     shift -= 8;
@@ -71,6 +73,7 @@ void handle_input(char * string)
     	}
     }
     
+    // gets the number of bits of the mask
     for(i = 0; string[i] != 0; i++)
     {
     	if(string[i] == 47) // check if it's a slash and get the value after it
@@ -79,6 +82,7 @@ void handle_input(char * string)
     	}
     }
 
+    // makes the mask an integer number
     for(i = 31; i > (31 - number_of_mask_bits); i--)
     {
         temp = (1 << i);
@@ -94,6 +98,7 @@ int main(int argc, char ** argv)
     unsigned int host_min = 0;
     unsigned int host_max = 0;
 
+    // check if an address was given
     if(argc < 2)
     {
         usage(argv[0]);
@@ -101,24 +106,30 @@ int main(int argc, char ** argv)
 
     printf("Entry address %s\n", argv[1]);
 
+    // transform the given input in numbers
     handle_input(argv[1]);
 
-    // calculating values
+    // calculating values through the global variables
     network_address = ip_number & mask_number; 
     broadcast = ~(mask_number);
     broadcast = broadcast + network_address;
     host_min = network_address + 1;
     host_max = broadcast - 1;
 
-    // printing values
+    // printing the results
     printf("Network address: ");
     print_ip_address(&network_address);
+    printf("\n");
     printf("Mask address: ");
     print_ip_address(&mask_number);
+    printf("\n");
     printf("Broadcast address: ");
     print_ip_address(&broadcast);
+    printf("\n");
     printf("Host Min: ");
     print_ip_address(&host_min);
+    printf("\n");
     printf("Host Max: ");
     print_ip_address(&host_max);
+    printf("\n");
 }
