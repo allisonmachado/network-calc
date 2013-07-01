@@ -6,6 +6,12 @@
 unsigned int ip_number = 0;
 unsigned int mask_number = 0, number_of_mask_bits;
 
+void usage(char * program_name)
+{
+    printf("Usage: %s <ip-addr/mask or net-addr/mask>\n", program_name);
+    exit(EXIT_FAILURE);
+}
+
 void print_ip_address(int * number_addr)
 {
     unsigned char * raw_ptr;
@@ -47,9 +53,9 @@ void binary_print(unsigned int number)
     }
 }
 
-void handle_input()
+void handle_input(char * string)
 {
-    char string[BUFFER] = "10.10.12.0/30";
+    //char string[BUFFER] = "10.10.12.0/30";
     unsigned int i, shift, temp = 0;
     
     shift = 24;
@@ -59,6 +65,7 @@ void handle_input()
     for(i = 0; string[i] != 0; i++)
     {
     	if(string[i] == 46) // Verifica se o caractere é um ponto e pega o valor númérico após o ponto
+
     	{
     		ip_number += (atoi(&string[i + 1]) << shift);
     		shift -= 8;
@@ -80,7 +87,7 @@ void handle_input()
     }
 }
 
-int main()
+int main(int argc, char ** argv)
 {
     // Declarações
     unsigned int network_address = 0;
@@ -88,7 +95,14 @@ int main()
     unsigned int host_min = 0;
     unsigned int host_max = 0;
 
-    handle_input();
+    if(argc < 2)
+    {
+        usage(argv[0]);
+    }
+
+    printf("Entry address %s\n", argv[1]);
+
+    handle_input(argv[1]);
 
     // Calculando valores
     network_address = ip_number & mask_number; 
@@ -98,13 +112,14 @@ int main()
     host_max = broadcast - 1;
 
     // Imprimindo valores
-    printf("Network address = %d\n", network_address);
+    printf("Network address: ");
     print_ip_address(&network_address);
-    printf("Broadcast address = %d\n", broadcast);
-    print_ip_address(&broadcast);
-    printf("Host Min = %d\n", host_min);
-    print_ip_address(&host_min);
-    printf("Host Max = %d\n", host_max);
-    print_ip_address(&host_max);
+    printf("Mask address: ");
     print_ip_address(&mask_number);
+    printf("Broadcast address: ");
+    print_ip_address(&broadcast);
+    printf("Host Min: ");
+    print_ip_address(&host_min);
+    printf("Host Max: ");
+    print_ip_address(&host_max);
 }
