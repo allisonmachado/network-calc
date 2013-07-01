@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define BUFFER 100
 
@@ -97,6 +98,7 @@ int main(int argc, char ** argv)
     unsigned int broadcast = 0;
     unsigned int host_min = 0;
     unsigned int host_max = 0;
+    double number_of_hosts_bits = 0;
 
     // check if an address was given
     if(argc < 2)
@@ -104,7 +106,9 @@ int main(int argc, char ** argv)
         usage(argv[0]);
     }
 
-    printf("Entry address %s\n", argv[1]);
+    printf("\n");
+    printf("Entry: %s\n", argv[1]);
+    printf("\n");
 
     // transform the given input in numbers
     handle_input(argv[1]);
@@ -118,18 +122,44 @@ int main(int argc, char ** argv)
 
     // printing the results
     printf("Network address: ");
+    printf("\t");
+    binary_print(network_address);
+    printf("\t");
     print_ip_address(&network_address);
     printf("\n");
-    printf("Mask address: ");
+
+    printf("Netmask:          ");
+    printf("\t");
+    binary_print(mask_number);
+    printf("\t");
     print_ip_address(&mask_number);
+    printf("(%d bits)", number_of_mask_bits);
     printf("\n");
-    printf("Broadcast address: ");
+
+    printf("Broadcast addr:   ");
+    printf("\t");
+    binary_print(broadcast);
+    printf("\t");
     print_ip_address(&broadcast);
     printf("\n");
-    printf("Host Min: ");
+
+    printf("Min Host value:   ");
+    printf("\t");
+    binary_print(host_min);
+    printf("\t");
     print_ip_address(&host_min);
     printf("\n");
-    printf("Host Max: ");
+
+    printf("Max Host value:   ");
+    printf("\t");
+    binary_print(host_max);
+    printf("\t");
     print_ip_address(&host_max);
+    printf("\n");
+    printf("\n");
+
+    number_of_hosts_bits = 32 - number_of_mask_bits;
+
+    printf("The possible number of hosts on this network is %d.\n", (int)pow(2, number_of_hosts_bits) - 2);
     printf("\n");
 }
