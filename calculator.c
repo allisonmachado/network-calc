@@ -30,32 +30,31 @@ void print_ip_address(int * number_addr)
 
 void binary_print(unsigned int number)
 {
-    unsigned int mask = 0xff000000; // máscara para o último byte
-    unsigned int shift = 24; // isolar os bytes, começa isolando o primeiro byte
-    unsigned int byte, byte_iterator, bit_iterator; //variáveis auxiliares
+    unsigned int mask = 0xff000000; // last byte mask
+    unsigned int shift = 24; // separate bytes
+    unsigned int byte, byte_iterator, bit_iterator; // auxiliary variables
 
-    for(byte_iterator = 0; byte_iterator < 4; byte_iterator++) // percorre todos os bytes
+    for(byte_iterator = 0; byte_iterator < 4; byte_iterator++) // byte iterator
     {
         byte = (number & mask) >> shift;
         printf(" ");
 
-        for(bit_iterator = 0; bit_iterator < 8; bit_iterator++) // percorre todos os bits
+        for(bit_iterator = 0; bit_iterator < 8; bit_iterator++) // bit iterator
         {
-            if(byte & 128) //imprime o valor do bit 
+            if(byte & 128) // print bit values
                 printf("1");
             else
                 printf("0");
             byte <<= 1;
         }
-        mask >>= 8; // ashiftusta a máscara para pegar o próximo byte
-        shift -= 8; // ashiftusta o shift para pegar o próximo byte
+        mask >>= 8; // adjust mask for next byte
+        shift -= 8; // adjust shift for next byte
         
     }
 }
 
 void handle_input(char * string)
 {
-    //char string[BUFFER] = "10.10.12.0/30";
     unsigned int i, shift, temp = 0;
     
     shift = 24;
@@ -64,7 +63,7 @@ void handle_input(char * string)
 
     for(i = 0; string[i] != 0; i++)
     {
-    	if(string[i] == 46) // Verifica se o caractere é um ponto e pega o valor númérico após o ponto
+    	if(string[i] == 46) // check if it's a dot and get the value after it
 
     	{
     		ip_number += (atoi(&string[i + 1]) << shift);
@@ -74,7 +73,7 @@ void handle_input(char * string)
     
     for(i = 0; string[i] != 0; i++)
     {
-    	if(string[i] == 47)
+    	if(string[i] == 47) // check if it's a slash and get the value after it
     	{
     		number_of_mask_bits += atoi(&string[i + 1]);
     	}
@@ -89,7 +88,7 @@ void handle_input(char * string)
 
 int main(int argc, char ** argv)
 {
-    // Declarações
+    // declarations
     unsigned int network_address = 0;
     unsigned int broadcast = 0;
     unsigned int host_min = 0;
@@ -104,14 +103,14 @@ int main(int argc, char ** argv)
 
     handle_input(argv[1]);
 
-    // Calculando valores
+    // calculating values
     network_address = ip_number & mask_number; 
     broadcast = ~(mask_number);
     broadcast = broadcast + network_address;
     host_min = network_address + 1;
     host_max = broadcast - 1;
 
-    // Imprimindo valores
+    // printing values
     printf("Network address: ");
     print_ip_address(&network_address);
     printf("Mask address: ");
