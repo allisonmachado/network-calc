@@ -50,7 +50,7 @@ void binary_print(unsigned int number)
         }
         mask >>= 8; // adjust mask for next byte
         shift -= 8; // adjust shift for next byte
-        
+
     }
 }
 
@@ -58,7 +58,7 @@ void binary_print(unsigned int number)
 void handle_input(char * string)
 {
     unsigned int i, shift, temp = 0;
-    
+
     // makes the input string an integer number in ip_number
     shift = 24;
     ip_number = (atoi(&string[0]) << shift);
@@ -66,21 +66,21 @@ void handle_input(char * string)
 
     for(i = 0; string[i] != 0; i++)
     {
-    	if(string[i] == 46) // check if it's a dot and get the value after it
+        if(string[i] == 46) // check if it's a dot and get the value after it
 
-    	{
-    		ip_number += (atoi(&string[i + 1]) << shift);
-    		shift -= 8;
-    	}
+        {
+            ip_number += (atoi(&string[i + 1]) << shift);
+            shift -= 8;
+        }
     }
-    
+
     // gets the number of bits of the mask
     for(i = 0; string[i] != 0; i++)
     {
-    	if(string[i] == 47) // check if it's a slash and get the value after it
-    	{
-    		number_of_mask_bits += atoi(&string[i + 1]);
-    	}
+        if(string[i] == 47) // check if it's a slash and get the value after it
+        {
+            number_of_mask_bits += atoi(&string[i + 1]);
+        }
     }
 
     // makes the mask an integer number
