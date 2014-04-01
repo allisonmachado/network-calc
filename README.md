@@ -1,8 +1,7 @@
 # network-calc
 
-Easy way to quicly find key values for a network environment such as the net,
-netmask, broadcast address and so on for a given input. See the
-execution bellow for an example:
+Easy way to quickly find key values for a network environment such as the binary net ip,
+netmask, broadcast address and so on for a given input. See the example below:
 
 ```
 
