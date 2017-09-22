@@ -21,7 +21,4 @@ The possible number of hosts on this network is 254.
 
 ## Install
 
-1. `$ cd /opt`
-2. `$ sudo git clone https://github.com/allisonmachado/network-calc`
-3. `cd network-calc`
-4. `sudo make && sudo make install`
+`curl https://raw.githubusercontent.com/allisonmachado/network-calc/master/install.sh | bash`
