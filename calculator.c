@@ -61,6 +61,28 @@ int is_valid_ip_address(char *ipAddress)
     return result != 0;
 }
 
+int is_valid_mask(char * mask_string)
+{
+    char *end;
+    int i = strtol(mask_string, &end, 10);
+
+    return i < 31;
+}
+
+void get_ip_string(char * input, char * destination, int slashPosition) {
+    for (int i = 0; i < slashPosition; i++) {
+        destination[i] = input[i];
+        destination[i + 1] = 0;
+    }
+}
+
+void get_mask_string(char * input, char * destination, int slashPosition) {
+    for (int i = slashPosition + 1, j = 0; input[i] != 0; i++, j++) {
+        destination[j] = input[i];
+        destination[j + 1] = 0;
+    }
+}
+
 void print_ip_address(int * number_addr)
 {
     unsigned char * raw_ptr; // pointer to get single bytes
@@ -147,8 +169,9 @@ int main(int argc, char ** argv)
     unsigned int host_min = 0;
     unsigned int host_max = 0;
     double number_of_hosts_bits = 0;
+    char ip_string[15];
+    char mask_string[4];
 
-    // check if an address was given
     if(argc < 2)
     {
         usage(argv[0], "You must provide a valid ip/mask");
@@ -156,7 +179,7 @@ int main(int argc, char ** argv)
 
     int inputSize = get_input_size(argv[1]);
 
-    if (inputSize > 15)
+    if (inputSize > 18)
     {
         usage(argv[0], "You must provide a valid ip/mask");
     }
@@ -171,6 +194,20 @@ int main(int argc, char ** argv)
     int slashPosition = get_slash_position(argv[1]);
 
     if (slashPosition == 0 || slashPosition == inputSize - 1)
+    {
+        usage(argv[0], "You must provide a valid ip/mask");
+    }
+
+    get_ip_string(argv[1], ip_string, slashPosition);
+
+    if (!is_valid_ip_address(ip_string))
+    {
+        usage(argv[0], "You must provide a valid ip/mask");
+    }
+
+    get_mask_string(argv[1], mask_string, slashPosition);
+
+    if (!is_valid_mask(mask_string))
     {
         usage(argv[0], "You must provide a valid ip/mask");
     }
