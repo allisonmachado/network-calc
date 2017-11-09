@@ -1,16 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <arpa/inet.h>
 
 #define BUFFER 100
 
 unsigned int ip_number = 0;
 unsigned int mask_number = 0, number_of_mask_bits;
 
-void usage(char * program_name)
+void usage(char * program_name, char * error_message)
 {
-    printf("Usage: %s <ip-addr/mask or net-addr/mask>\n", program_name);
+    printf("\n%s\nUsage: %s <ip-addr/mask or net-addr/mask>\n\n", error_message, program_name);
     exit(EXIT_FAILURE);
+}
+
+int get_input_size(char *input)
+{
+    int size = 0;
+
+    for(int i = 0; input[i] != 0; i++)
+    {
+        size++;
+    }
+
+    return size;
+}
+
+int get_number_of_slashes(char *input)
+{
+    int numberOfSlashes = 0;
+
+    for(int i = 0; input[i] != 0; i++)
+    {
+        if (input[i] == '/') {
+            numberOfSlashes++;
+        }
+    }
+
+    return numberOfSlashes;
+}
+
+int get_slash_position(char *input)
+{
+    int slashPosition = 0;
+
+    for(int i = 0; input[i] != 0; i++)
+    {
+        if (input[i] == '/') {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
+int is_valid_ip_address(char *ipAddress)
+{
+    struct sockaddr_in sa;
+    int result = inet_pton(AF_INET, ipAddress, &(sa.sin_addr));
+    return result != 0;
 }
 
 void print_ip_address(int * number_addr)
@@ -103,7 +151,28 @@ int main(int argc, char ** argv)
     // check if an address was given
     if(argc < 2)
     {
-        usage(argv[0]);
+        usage(argv[0], "You must provide a valid ip/mask");
+    }
+
+    int inputSize = get_input_size(argv[1]);
+
+    if (inputSize > 15)
+    {
+        usage(argv[0], "You must provide a valid ip/mask");
+    }
+
+    int numberOfSlashes = get_number_of_slashes(argv[1]);
+
+    if (numberOfSlashes != 1)
+    {
+        usage(argv[0], "You must provide a valid ip/mask");
+    }
+
+    int slashPosition = get_slash_position(argv[1]);
+
+    if (slashPosition == 0 || slashPosition == inputSize - 1)
+    {
+        usage(argv[0], "You must provide a valid ip/mask");
     }
 
     printf("\n");
@@ -114,7 +183,7 @@ int main(int argc, char ** argv)
     handle_input(argv[1]);
 
     // calculating values through the global variables
-    network_address = ip_number & mask_number; 
+    network_address = ip_number & mask_number;
     broadcast = ~(mask_number);
     broadcast = broadcast + network_address;
     host_min = network_address + 1;
